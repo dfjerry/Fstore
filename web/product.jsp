@@ -29,9 +29,9 @@
         width: 140px
     }
 </style>
-<%--<c:if test="${sessionScope.user==null}">--%>
-<%--    <jsp:forward page="login.jsp"></jsp:forward>--%>
-<%--</c:if>--%>
+<c:if test="${sessionScope.user==null}">
+    <jsp:forward page="login.jsp"></jsp:forward>
+</c:if>
 <div class="container py-5">
     <a href="<%= request.getContextPath()%>/logout" class="nav-link">Logout</a>
     <div class="row text-center text-white mb-5">

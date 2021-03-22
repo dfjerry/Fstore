@@ -26,18 +26,20 @@ public class ServletController extends javax.servlet.http.HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         String action = request.getServletPath();
+        System.out.println(action);
         try {
             switch (action){
-                case "login":
+                case "/login":
                     login(request, response);
                     break;
-                case "check":
-                    checkUser(request, response);
+                case "/check":
+                    System.out.println("vao check");
+                    check(request, response);
                     break;
-                case "list":
+                case "/list":
                     listProduct(request, response);
                     break;
-                case "logout":
+                case "/logout":
                     logout(request, response);
                     break;
                 default:
@@ -54,25 +56,32 @@ public class ServletController extends javax.servlet.http.HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("product.jsp");
         dispatcher.forward(request, response);
     }
-    private void checkUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException, ClassNotFoundException{
+    private void check(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException, ClassNotFoundException{
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User user = new User(username, password);
         HttpSession session = request.getSession();
-        if (DAO.checkUser(user)){
+        if (DAO.checkUser(user) == true){
+            System.out.println("ok");
             session.setAttribute("user", user);
-            response.sendRedirect("list");
+            List<Product> listProduct = DAO.selectAllProducts();
+            request.setAttribute("listProduct", listProduct);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("product.jsp");
+            dispatcher.forward(request, response);
         }else{
+            System.out.println("sai roi");
             session.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu");
-            response.sendRedirect("list");
+            response.sendRedirect("login");
         }
     }
     private void login(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException, ClassNotFoundException{
-        response.sendRedirect("login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
     }
     private void logout(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException, ClassNotFoundException{
         HttpSession session = request.getSession();
         session.setAttribute("user", null);
-        response.sendRedirect("login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
     }
 }
