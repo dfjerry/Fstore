@@ -50,17 +50,15 @@ public class DAO {
         return users;
     }
     public boolean checkUser(User user) throws SQLException, ClassNotFoundException{
-        boolean rowUpdate;
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(CHECK_USERS);
-        statement.setString(1, user.getUsername());
-        statement.setString(2, user.getPassword());
-        ResultSet resultSet = statement.executeQuery();
+        PreparedStatement preparedStatement = connection.prepareStatement(CHECK_USERS);
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, user.getPassword());
+        ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
-            return rowUpdate = true;
+            return true;
         }
-        rowUpdate = false;
-        return rowUpdate;
+        return false;
     }
 //    public static void main(String[] args) throws SQLException, ClassNotFoundException {
 //        if (getConnection() !=null ){
